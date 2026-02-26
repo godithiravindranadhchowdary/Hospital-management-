@@ -10,6 +10,8 @@ services:
         generateValue: true
       - key: DJANGO_DEBUG
         value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "*"
       - key: DATABASE_ENGINE
         value: django.db.backends.postgresql
       - key: DATABASE_NAME
