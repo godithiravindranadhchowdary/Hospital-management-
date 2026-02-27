@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from .views import (
     AuthViewSet, UserViewSet, DoctorViewSet, PatientViewSet,
     AppointmentViewSet, PrescriptionViewSet, InvoiceViewSet,
-    DashboardViewSet, ChangePasswordView
+    DashboardViewSet, ChangePasswordView, populate_database
 )
 
 router = DefaultRouter()
@@ -28,4 +28,7 @@ urlpatterns = [
     path('auth/register/', AuthViewSet.as_view({'post': 'register'}), name='register'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/change-password/', ChangePasswordView.as_view(), name='change-password'),
+    
+    # Populate database endpoint (use with caution!)
+    path('populate/', populate_database, name='populate_database'),
 ]

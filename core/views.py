@@ -5,7 +5,7 @@ from django.db.models import Count, Sum, Q
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework import viewsets, status, generics
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -21,6 +21,42 @@ from .permissions import (
     IsAdminUser, IsDoctorUser, IsPatientUser, IsAdminOrReadOnly,
     IsDoctorOrAdmin, IsPatientOrDoctor, CanManageAppointment
 )
+
+
+@api_view(['POST'])
+def populate_database(request):
+    """
+    API endpoint to populate the database with sample data.
+    Use with caution - only for initial setup!
+    """
+    # Check for a secret key to prevent unauthorized access
+    secret_key = request.data.get('secret_key', '')
+    
+    # Simple protection - change this to a custom key
+    if secret_key != 'populate2024':
+        return Response(
+            {'error': 'Invalid secret key'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    # Import the populate function
+    from django.core.management import call_command
+    from io import StringIO
+    
+    output = StringIO()
+    
+    try:
+        # Call the management command
+        call_command('populate_db', stdout=output)
+        
+        return Response({
+            'message': 'Database populated successfully!',
+            'output': output.getvalue()
+        })
+    except Exception as e:
+        return Response({
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class AuthViewSet(viewsets.ViewSet):
