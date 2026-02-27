@@ -137,6 +137,85 @@ The application features a beautiful glassmorphism design with:
 - Frosted glass cards with backdrop blur
 - Smooth hover animations
 
+## Deployment to Render
+
+This application is configured for easy deployment to Render.
+
+### Prerequisites
+1. A GitHub account
+2. A Render account (free tier works)
+
+### Deployment Steps
+
+#### Option 1: Deploy with render.yaml (Recommended)
+
+1. **Push your code to GitHub:**
+   
+```
+bash
+   git add .
+   git commit -m "Prepare for Render deployment"
+   git push origin main
+   
+```
+
+2. **Create a Render Account:**
+   - Go to [render.com](https://render.com) and sign up
+   - Connect your GitHub account
+
+3. **Deploy:**
+   - In Render dashboard, click "New +" and select "Blueprint"
+   - Select your GitHub repository
+   - Render will read `render.yaml` and create:
+     - A PostgreSQL database (`hospital-db`)
+     - A web service (`hospital-management`)
+   - Click "Apply"
+
+4. **Your app will be deployed!** 
+   - Once complete, you'll get a URL like: `https://hospital-management.onrender.com`
+
+#### Option 2: Manual Deployment
+
+1. **Create PostgreSQL Database:**
+   - Go to Render dashboard → "New +" → "PostgreSQL"
+   - Name: `hospital-db`
+   - Plan: Free
+   - Copy the "Internal Database URL"
+
+2. **Create Web Service:**
+   - Go to Render dashboard → "New +" → "Web Service"
+   - Connect your GitHub repository
+   - Configure:
+     - Name: `hospital-management`
+     - Environment: `Python`
+     - Build Command: `pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput`
+     - Start Command: `gunicorn config.wsgi:application --bind 0.0.0.0:$PORT`
+   - Add Environment Variables:
+     - `DJANGO_SECRET_KEY`: Generate a secure key
+     - `DJANGO_DEBUG`: `False`
+     - `ALLOWED_HOSTS`: `*`
+     - `DATABASE_URL`: Paste your database URL from step 1
+   - Click "Create Web Service"
+
+### After Deployment
+
+1. **Create Admin User:**
+   - Go to your deployed URL: `https://hospital-management.onrender.com`
+   - Access shell via Render dashboard → "Shell"
+   - Run: `python manage.py createsuperuser`
+   - Follow prompts to create admin account
+
+2. **Access Your App:**
+   - Main URL: `https://hospital-management.onrender.com`
+   - Admin Panel: `https://hospital-management.onrender.com/admin/`
+   - API: `https://hospital-management.onrender.com/api/`
+
+### Troubleshooting
+
+- **Static files not loading:** Ensure `collectstatic` ran during build
+- **Database connection error:** Check DATABASE_URL is set correctly
+- **500 Error:** Check Render logs for detailed error messages
+
 ## License
 
 MIT License
