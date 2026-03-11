@@ -16,13 +16,8 @@ from .models import User, Doctor, Patient, Appointment, Prescription, Invoice, D
 
 
 def home(request):
-    """Render the home page."""
-    return render(request, 'index.html')
-
-
-def project(request):
-    """Render the project page."""
-    return render(request, 'project.html')
+    """Redirect to admin dashboard."""
+    return redirect('admin_login')
 
 
 # ============================================
