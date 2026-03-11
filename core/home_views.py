@@ -20,6 +20,11 @@ def home(request):
     return render(request, 'index.html')
 
 
+def project(request):
+    """Render the project page."""
+    return render(request, 'project.html')
+
+
 # ============================================
 # PUBLIC VIEWS
 # ============================================
