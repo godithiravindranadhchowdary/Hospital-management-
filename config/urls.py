@@ -7,7 +7,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from core.home_views import (
-    home, doctors_list, patients_list, appointments_list,
+    home, project, doctors_list, patients_list, appointments_list,
     prescriptions_list, invoices_list, dashboard, login_view, logout_view,
     # Patient views
     patient_dashboard, patient_appointments, patient_prescriptions, patient_invoices,
@@ -30,6 +30,7 @@ admin.site.login = LoginView.as_view(
 
 urlpatterns = [
     path('', home, name='home'),
+    path('project/', project, name='project'),
     path('admin/login/', admin.site.login, name='admin_login'),
     
     # =======================
